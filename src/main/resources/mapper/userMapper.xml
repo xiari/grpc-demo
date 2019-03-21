@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.Mapper">
+
+<!--   采用嵌套结果结果暂时不成功不知道什么原因-->
+<resultMap id="orderResultMap" type="com.example.demo.entity.Teacher">
+        <id property="id" column="id"/>
+        <result column="name" property="userName" />
+        <collection property="students"  ofType="com.example.demo.entity.Student">
+            <id column="sid" property="id" />
+            <result column="sname" property="name"/><!-- property对应JavaBean中的属性名 -->
+            <result column="className" property="className"/>
+        </collection>
+    </resultMap>
+
+    <select id="query" resultMap="orderResultMap" >
+      SELECT
+			t.id,
+			t.NAME,
+			s.id AS sid,
+			s. NAME AS sname,
+			s.classname as className
+		FROM
+			teacher t
+		LEFT JOIN student s ON t.id = s.teacher_id
+    </select>
+
+    <!-- 查询方式1:n (2) -->
+    <resultMap id="userAddressInfo" type="com.example.demo.entity.Teacher">
+        <id property="id" column="END_USER_ID"/>
+        <id property="userName" column="END_USER_NAME"/>
+        <collection property="addressList" javaType="ArrayList"
+                    column="END_USER_ID" ofType="com.example.demo.entity.Student" select="selectAddressForUser"/>
+    </resultMap>
+
+    <select id="queryUserInfo" parameterType="java.util.Map" resultMap="userAddressInfo">
+      SELECT END_USER_ID , END_USER_NAME  FROM end_user limit #{start},#{offset}
+     <!-- WHERE end_user_id = #{userId} limit #{start},#{offset} -->
+    </select>
+
+    <select id="selectAddressForUser" resultType="com.example.demo.entity.Student">
+      SELECT ID , USER_ID AS userId , ADDRESS AS address  FROM user_address WHERE user_id = #{END_USER_ID}
+    </select>
+
+
+    <!--   采用嵌套结果结果暂时不成功不知道什么原因-->
+    <resultMap id="soMap" type="com.example.demo.entity.So">
+        <id property="id" column="id"/>
+        <result column="orderNo" property="orderNo" />
+        <collection property="soItemList" column="id" ofType="com.example.demo.entity.SoItem">
+            <id column="itemId" property="id" />
+            <result column="item_no" property="itemNo"/><!-- property对应JavaBean中的属性名 -->
+        </collection>
+    </resultMap>
+
+    <select id="queryOrder" parameterType="java.lang.Integer" resultMap="soMap" >
+     SELECT so.id, so.order_no as orderNo,item.id as itemId, item.item_no as item_no
+      FROM so_order so ,so_order_item item where so.order_no = item.order_no
+      AND so.ID = #{id,jdbcType=INTEGER}
+    </select>
+
+</mapper>
+
+
+
