@@ -3,6 +3,7 @@ package com.example.demo;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.example.demo.mapper.Mapper;
+import com.example.tutorial.AddressBookProtos;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ public class DemoApplicationTests {
 //        System.out.println(JSON.toJSON(mapper.queryUserInfo(parms)));
 //        System.out.println(JSON.toJSON(mapper.query(3)));
         System.out.println(JSON.toJSON(mapper.queryOrder(1)));
-
 
     }
 
