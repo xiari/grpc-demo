@@ -1,36 +1,21 @@
 package com.example.demo;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.fastjson.JSON;
-import com.example.demo.mapper.Mapper;
-import com.example.tutorial.AddressBookProtos;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DemoApplicationTests {
+
     @Autowired
-    Mapper mapper;
+    private RedisTemplate<String,String> redisTemplate;
     @Test
     public void contextLoads() {
-
-//        System.out.println(JSON.toJSON(mapper.query(1))) ;
-        Map<String, Object> parms = new HashMap<>();
-        parms.put("start",1);
-        parms.put("offset",5);
-//        parms.put("userId",2);
-
-//        System.out.println(JSON.toJSON(mapper.queryUserInfo(parms)));
-//        System.out.println(JSON.toJSON(mapper.query(3)));
-        System.out.println(JSON.toJSON(mapper.queryOrder(1)));
-
+        redisTemplate.opsForHash().put("order", "hKey01","value01");
+        System.out.println(redisTemplate.opsForHash().get("order", "hKey01"));
     }
-
 }
